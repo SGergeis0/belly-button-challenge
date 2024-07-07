@@ -33,7 +33,7 @@ function buildCharts(sample) {
     const samples = data.samples
 
     // Filter the samples for the object with the desired sample number
-    const sampleArray = samples.filter(sample => sample.id == sampleID);
+    const sampleArray = samples.filter(sample => sample.id == sample);
     const sample1 = sampleArray[0];
 
     // Get the otu_ids, otu_labels, and sample_values
@@ -58,19 +58,20 @@ function buildCharts(sample) {
     });
 
 };
-  // Build bubble plot
-  function buildBubblePlot(sampleID) {
-    d3.json(url).then((data) => {
-      const samples = data.samples;
-  
-      const sampleArray = samples.filter(sample => sample.id == sampleID);
+// Build bubble plot
+function buildBubblePlot(sampleID) {
+  d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
+    const samples = data.samples;
+
+    const sampleArray = samples.filter(sample => sample.id == sampleID);
+    if (sampleArray.length > 0) {
       const sample = sampleArray[0];
-  
+
       // Assign variable names
       const otu_ids = sample.otu_ids;
       const sample_values = sample.sample_values;
       const otu_labels = sample.otu_labels;
-  
+
       const trace2 = [
         {
           x: otu_ids,
@@ -84,15 +85,18 @@ function buildCharts(sample) {
           }
         }
       ];
-  
+
       const layout2 = {
         xaxis: { title: "OTU ID" }
       };
-  
+
       // Render the Bubble plot
       Plotly.newPlot("bubble", trace2, layout2);
-    });
-  }
+    } else {
+      console.log("No sample found for the given sampleID");
+    }
+  });
+}
 
 // Function to run on page load
 function init() {
